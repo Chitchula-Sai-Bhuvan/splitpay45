@@ -1,0 +1,7 @@
+src/config/mysql.ts(1,30): error TS2307: Cannot find module '@prisma/client' or its corresponding type declarations.
+src/seed.ts(1,30): error TS2307: Cannot find module '@prisma/client' or its corresponding type declarations.
+src/services/expenseService.ts(1,30): error TS2307: Cannot find module '@prisma/client' or its corresponding type declarations.
+src/services/expenseService.ts(26,54): error TS7006: Parameter 'tx' implicitly has an 'any' type.
+src/services/groupService.ts(1,30): error TS2307: Cannot find module '@prisma/client' or its corresponding type declarations.
+src/services/settlementService.ts(1,30): error TS2307: Cannot find module '@prisma/client' or its corresponding type declarations.
+src/services/userService.ts(1,30): error TS2307: Cannot find module '@prisma/client' or its corresponding type declarations.

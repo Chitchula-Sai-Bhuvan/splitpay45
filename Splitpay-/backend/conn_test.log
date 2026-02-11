@@ -1,0 +1,13 @@
+--- Config ---
+DATABASE_URL: mysql://root:root@localhost:3306/SplitPayDB
+NEO4J_URI: neo4j+s://cb7606d9.databases.neo4j.io
+❌ MySQL Connect failed: 
+Invalid `prisma.user.count()` invocation in
+C:\Users\chitc\Desktop\dbms_anti\backend\debug_connect.ts:24:45
+
+  21 await measure('MySQL Connect', async () => {
+  22     const prisma = new PrismaClient();
+  23     await prisma.$connect();
+→ 24     const userCount = await prisma.user.count(
+The table `user` does not exist in the current database.
+✅ Neo4j Connect passed (2818ms)

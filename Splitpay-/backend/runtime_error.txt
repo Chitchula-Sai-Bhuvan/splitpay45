@@ -1,0 +1,33 @@
+C:\Users\chitc\Desktop\dbms_anti\backend\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:259
+        throw new PrismaClientInitializationError(
+              ^
+PrismaClientInitializationError: `PrismaClient` needs to be constructed with a non-empty, valid `PrismaClientOptions`:
+
+```
+new PrismaClient({
+  ...
+})
+```
+
+or
+
+```
+constructor() {
+  super({ ... });
+}
+```
+          
+    at new t (C:\Users\chitc\Desktop\dbms_anti\backend\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:259:15)
+    at Object.<anonymous> (C:\Users\chitc\Desktop\dbms_anti\backend\src\services\userService.ts:6:16)
+    at Module._compile (node:internal/modules/cjs/loader:1688:14)
+    at Module.m._compile (C:\Users\chitc\Desktop\dbms_anti\backend\node_modules\ts-node\src\index.ts:1618:23)
+    at node:internal/modules/cjs/loader:1820:10
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\chitc\Desktop\dbms_anti\backend\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1423:32)
+    at Function._load (node:internal/modules/cjs/loader:1246:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24) {
+  clientVersion: '7.3.0',
+  errorCode: undefined,
+  retryable: undefined
+}

@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique
+  name         String?
+  passwordHash String
+  createdAt    DateTime  @default(now())
+
+  ownedGroups         Group[]        @relation("GroupCreator")
+  memberships         GroupMember[]
+  expensesPaid        Expense[]      @relation("ExpensePayer")
+  expenseShares       ExpenseShare[]
+  
+  settlementsPaid     Settlement[]   @relation("SettlementPayer")
+  settlementsReceived Settlement[]   @relation("SettlementPayee")
+
+  // Relations for DebtLedger
+  debtsOwed           DebtLedger[]   @relation("LedgerPayer")
+  debtsReceivable     DebtLedger[]   @relation("LedgerPayee")
+}
+
+model Group {
+  id          Int      @id @default(autoincrement())
+  name        String
+  createdById Int
+  createdBy   User     @relation("GroupCreator", fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+  isFrozen    Boolean  @default(false)
+  
+  members     GroupMember[]
+  expenses    Expense[]
+  
+  // Relations for DebtLedger
+  ledgerEntries DebtLedger[]
+}
+
+model GroupMember {
+  id      Int    @id @default(autoincrement())
+  groupId Int
+  userId  Int
+  role    String // ADMIN, MEMBER
+  
+  group   Group  @relation(fields: [groupId], references: [id])
+  user    User   @relation(fields: [userId], references: [id])
+
+  @@unique([groupId, userId])
+}
+
+model Expense {
+  id          Int      @id @default(autoincrement())
+  groupId     Int
+  payerId     Int
+  amount      Decimal
+  description String
+  createdAt   DateTime @default(now())
+  
+  group       Group    @relation(fields: [groupId], references: [id])
+  payer       User     @relation("ExpensePayer", fields: [payerId], references: [id])
+  shares      ExpenseShare[]
+  
+  // Relation to Ledger
+  ledgerEntries DebtLedger[]
+}
+
+model ExpenseShare {
+  id        Int     @id @default(autoincrement())
+  expenseId Int
+  userId    Int
+  amount    Decimal
+  
+  expense   Expense @relation(fields: [expenseId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
+}
+
+model Settlement {
+  id        Int      @id @default(autoincrement())
+  payerId   Int
+  payeeId   Int
+  amount    Decimal
+  timestamp DateTime @default(now())
+  
+  payer     User     @relation("SettlementPayer", fields: [payerId], references: [id])
+  payee     User     @relation("SettlementPayee", fields: [payeeId], references: [id])
+}
+
+// Global Settlement Engine - Double Entry Ledger
+model DebtLedger {
+  id              Int      @id @default(autoincrement())
+  expenseId       Int?
+  groupId         Int
+  payerId         Int      // The one who OWES
+  payeeId         Int      // The one who IS OWED
+  amount          Decimal
+  isSettled       Boolean  @default(false)
+  transactionDate DateTime @default(now())
+
+  expense         Expense? @relation(fields: [expenseId], references: [id])
+  group           Group    @relation(fields: [groupId], references: [id])
+  payer           User     @relation("LedgerPayer", fields: [payerId], references: [id])
+  payee           User     @relation("LedgerPayee", fields: [payeeId], references: [id])
+  
+  @@index([payerId])
+  @@index([payeeId])
+  @@index([groupId])
+}
